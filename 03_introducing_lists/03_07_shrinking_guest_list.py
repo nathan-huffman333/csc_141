@@ -45,5 +45,3 @@ del guests[0]
 
 for x in range (len(guests)):
     print(guests[x])
-
-print("hello")
