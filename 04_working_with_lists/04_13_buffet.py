@@ -13,5 +13,5 @@ print("\n")
 
 # This doesn't work on purpose to show that tuples can't be changed:
 
-buffet[3] = "Salad"
+buffet[0] = "Salad"
 
