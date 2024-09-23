@@ -1,3 +1,5 @@
+# I designed the code to have a separate copy of my list, then add 2 new items to each and display them.
+
 pizzas = ["pepperoni", "cheese", "stuffed crust"]
 friends_pizzas = pizzas [:]
 

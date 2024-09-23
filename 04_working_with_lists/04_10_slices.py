@@ -1,3 +1,5 @@
+# I used the list of the previous assignment, then display the first three, last three, and three items from the middle of the list.
+
 cubes = [value**3 for value in range(1, 11)]
 
 print("The first three items in the list are: ")

@@ -1,3 +1,5 @@
+# I designed the code to essentially do the same thing as the last code but using lists provided by the book.
+
 my_foods = ['pizza', 'falafel', 'carrot cake']
 friend_foods = my_foods[:]
 

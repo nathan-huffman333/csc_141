@@ -1,3 +1,5 @@
+# I designed the code to print a menu for a buffet and show how tuples cannot be changed.
+
 buffet = ("Mac and Cheese","Hot Dogs", "Pizza", "French Fries", "Mashed Potatoes")
 
 print("\nOriginal Menu:")

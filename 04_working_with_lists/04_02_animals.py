@@ -1,3 +1,5 @@
+# I designed the code to display a list of animals, then write a unique sentence about each of them.
+
 animals = ["dog","cat","hamster"]
 
 print("\n")

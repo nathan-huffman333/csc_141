@@ -1,3 +1,5 @@
+# I designed the code to print my favorite pizza types and write a unique sentence about each of them.
+
 pizzas = ["pepperoni", "cheese", "stuffed crust"]
 
 print("\n")
