@@ -1,3 +1,5 @@
+# This code is used to find someone's age.
+
 age = 19
 
 if age < 2:

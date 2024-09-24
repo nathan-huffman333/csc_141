@@ -1,3 +1,5 @@
+# This program is used to see if a string is equal to another string, or if a number is equal to another number.
+
 string_one = "Thing"
 string_two = "Other"
 

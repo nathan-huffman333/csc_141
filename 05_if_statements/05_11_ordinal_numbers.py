@@ -1,3 +1,5 @@
+# This code is for displaying numbers with there correct ordinal indicator.
+
 nums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 for x in nums:

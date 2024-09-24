@@ -1,3 +1,5 @@
+# The point of this code is to see if one string equals another.
+
 greeting = "hello"
 
 print("\nIs greeting equal to hello? I predict TRUE.")

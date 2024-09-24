@@ -1,3 +1,5 @@
+# This code is used to build of the previous one, but now it displays when there is no more users.
+
 usernames = ["nathan", "james", "admin", "user", "coder"]
 
 for x in usernames:

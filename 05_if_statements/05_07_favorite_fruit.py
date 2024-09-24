@@ -1,3 +1,5 @@
+# This code is for finding what someone's favorite fruits are.
+
 favorite_fruits = ["apple", "watermelon", "grapes"]
 
 if "apple" in favorite_fruits:

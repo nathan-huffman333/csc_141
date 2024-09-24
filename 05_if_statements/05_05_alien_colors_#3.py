@@ -1,3 +1,5 @@
+# This code is used to find the color of the alien and give points depending on the color.
+
 alien_color = "red"
 
 if alien_color == "green":

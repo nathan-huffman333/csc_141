@@ -1,3 +1,5 @@
+# This code is to see if a new username is available or not.
+
 current_users = ["james", "nathan", "tara", "jeffrey", "andrea"]
 new_users = ["NATHAN", "matthew", "josh", "peter", "TARA"]
 

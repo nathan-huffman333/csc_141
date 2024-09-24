@@ -1,3 +1,5 @@
+# This code is to see what color the alien is.
+
 # This version fails
 
 alien_color = "red"
