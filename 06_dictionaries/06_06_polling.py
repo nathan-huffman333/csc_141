@@ -1,10 +1,10 @@
 # This code is for seeing if someone still needs to respond to the poll or not.
 
 favorite_languages = {
-'jen': 'python',
-'sarah': 'c',
-'edward': 'rust',
-'phil': 'python',
+    'jen': 'python',
+    'sarah': 'c',
+    'edward': 'rust',
+    'phil': 'python',
 }
 
 new_names = ["nathan", "sarah", "greg", "bob","phil"]
