@@ -1,3 +1,5 @@
+# This code is for displaying vocabulary I have learned so far about python.
+
 glossary = {
     'condition statement': "A command that will check to see if a specification is met, and if so, perform an action.",
     'dictionary': "A collection of key-value pairs, with each key connected to a value and can be used to find the value related to it.",

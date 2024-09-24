@@ -1,3 +1,5 @@
+# This code is for displaying even more vocabulary word I have learned.
+
 glossary = {
     'comment': "A sentence or group of sentence written to help make code more readable, that does not affect how the code runs.",
     'condition statement': "A command that will check to see if a specification is met, and if so, perform an action.",

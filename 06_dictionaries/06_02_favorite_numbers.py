@@ -1,3 +1,5 @@
+# This code is for displaying the favorite numbers from a group of people.
+
 favorite_numbers = {
     'nathan': 333,
     'anthony': 100,

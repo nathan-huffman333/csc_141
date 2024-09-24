@@ -1,3 +1,5 @@
+# This code is for describing what rivers run through what country.
+
 rivers = {
     'Egypt': "the nile",
     'The USA': "the mississippi",
