@@ -1,4 +1,4 @@
-# This code displays 3 of each person's favorite numbers.
+# This code displays 3 of each person's favorite numbers in one line.
 
 favorite_numbers = {
     'nathan' : [333, 64, 100],
