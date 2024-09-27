@@ -1,3 +1,5 @@
+# This code is to display orders and what sandwiches are made, but also ensures that no pastrami sandwiches are made.
+
 import os
 os.system('cls')
 
