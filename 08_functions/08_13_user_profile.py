@@ -12,4 +12,8 @@ user_profile = build_profile('nathan', 'huffman',
                             location='reading',
                             field='computer science',
                             hobby='video games')
-print(user_profile)
+
+print("User Information:")
+for data, info in user_profile.items():
+    print(f"\t{data}: {info}")
+print("\n")
