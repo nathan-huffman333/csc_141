@@ -14,6 +14,6 @@ user_profile = build_profile('nathan', 'huffman',
                             hobby='video games')
 
 print("User Information:")
-for data, info in user_profile.items():
-    print(f"\t{data}: {info}")
+for quality, info in user_profile.items():
+    print(f"\t{quality}: {info}")
 print("\n")
