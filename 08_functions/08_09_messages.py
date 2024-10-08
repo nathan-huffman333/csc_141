@@ -7,5 +7,5 @@ def show_messages(joke):
     for message in joke:
         print(message)
 
-joke = ["knock knock.", "who's there?", "Kenya", "Kenya who?", "Kenya lend me some money?"]
+joke = ["Knock knock.", "Who's there?", "Kenya", "Kenya who?", "Kenya lend me some money?"]
 show_messages(joke)

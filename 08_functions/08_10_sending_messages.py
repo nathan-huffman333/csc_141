@@ -13,7 +13,7 @@ def send_messages(joke):
         sent_messages.append(x)
 
 sent_messages = []
-joke = ["knock knock.", "who's there?", "Kenya", "Kenya who?", "Kenya lend me some money?"]
+joke = ["Knock knock.", "Who's there?", "Kenya", "Kenya who?", "Kenya lend me some money?"]
 
 send_messages(joke)
 print(f"\nFirst list:{joke}")
