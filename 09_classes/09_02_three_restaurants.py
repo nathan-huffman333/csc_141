@@ -11,12 +11,11 @@ class Restaurant:
     def describe_restaurant(self):
         print(f"Restaurant Name: {self.restaurant_name}")
         print(f"Cuisine Type: {self.cuisine_type}")
-        return self
+       
     
     def open_restaurant(self):
         print(f"{self.restaurant_name} is now open!")
-        return self
-
+        
 
 restaurant = Restaurant("La Bella Italia", "Italian")
 restaurant.describe_restaurant()
