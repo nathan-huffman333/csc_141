@@ -14,8 +14,6 @@ class IceCreamStand(Restaurant):
         for x in self.flavors:
             print(f"\t{x.title()}")
 
-
-
 restaurant = IceCreamStand("Joe's Ice Cream Shop", "Ice Cream")
 restaurant.describe_restaurant()
 print("")
