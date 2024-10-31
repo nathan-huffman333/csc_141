@@ -1,4 +1,4 @@
-#
+# This imports multiple classes from another file to describe admins and users.
 
 import os
 os.system('cls')
