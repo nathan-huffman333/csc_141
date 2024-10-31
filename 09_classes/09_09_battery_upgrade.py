@@ -1,3 +1,5 @@
+# This code is the updated code of the car code from the book but with an added method to upgrade the battery to be more powerful.
+
 import os
 os.system('cls')
 

@@ -1,4 +1,4 @@
-# This code uses a subclass for specifically Ice Cream stands in the parent class Restaurant.
+# This code imports Restaurant from another file and calls some of its methods.
 
 import os
 os.system('cls')
