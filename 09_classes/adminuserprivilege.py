@@ -38,4 +38,3 @@ class Privileges():
         print("ADMIN PRIVILEGES:")
         for x in self.privileges:
             print(f"\t{x.upper()}")
-
