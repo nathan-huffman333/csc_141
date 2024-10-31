@@ -1,11 +1,10 @@
-# This imports multiple classes from another file to describe admins and users.
+# This takes classes from two separate files to describe users and admins.
 
 import os
 os.system('cls')
-
-from adminuserprivilege import User
-from adminuserprivilege import Admin
-from adminuserprivilege import Privileges
+from user import User
+from adminprivilege import Admin
+from adminprivilege import Privileges
 
 nathan = Admin("Nathan", "Huffman", 19, "Dark Brown", "Blue")
 nathan.describe_user()
