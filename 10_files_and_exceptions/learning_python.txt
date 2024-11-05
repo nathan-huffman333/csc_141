@@ -1,0 +1,6 @@
+In python you can create functions to easily call and reuse lines of code.
+In python you can have for and while loops to do something continuously. 
+In python you can create classes to assign specific values to a type of variable
+In python you can make dictionaries to create a collection of similar but different variables.
+In python you can have the user input text or numbers.
+In python you can use variables to assign and store values.
