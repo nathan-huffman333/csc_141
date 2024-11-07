@@ -7,8 +7,8 @@ from pathlib import Path
 
 path = Path("10_files_and_exceptions/cats.txt")
 
-print("Cat names:")
 try:
+    print("Cat names:")
     contents = path.read_text()
     print(contents)
 except FileNotFoundError:
@@ -16,8 +16,8 @@ except FileNotFoundError:
 
 path = Path("10_files_and_exceptions/dogs.txt")
 
-print("\nDog names:")
 try:
+    print("\nDog names:")
     contents = path.read_text()
     print(contents)
 except FileNotFoundError:
