@@ -1,5 +1,4 @@
-# Difficulty: 2/10 Pretty easy now that pytest is working, the coding was relatively simple.
-# This code does the same as the last one except now there is an optional parameter of 'population'.
+# For comments, see new_city_functions.py
 
 from new_city_functions import city_country
 import os
