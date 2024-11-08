@@ -1,5 +1,5 @@
-# Difficulty: 6/10 A little hard to understand the code of the book as well as remembering dictionaries and how to use them with json files.
-# This code asks for the user's name, age, and favorite color if it is not already known, and then when the program is rerun, it recalls the previous information from a json file.
+# Difficulty: 2/10 pretty easy, I essentially just had to add an if statment. 
+# This code builds off of the previous one, except now it will confirm whether it is the correct user before either diplaying the information or asking for new data.
 
 from pathlib import Path
 import json
@@ -37,12 +37,18 @@ def greet_user():
     path = Path('username.json')
     data = does_information_exist(path)
     if data:
-        print(f"Welcome back, {data['username']}!")
-        print(f"You are {data['age']} years old.")
-        print(f"Your favorite color is {data['fav_color']}.\n")
+        confirm = input(f"Are you user: {data['username']}? Y/N: ")
+        if confirm == "y" or confirm == "Y":
+            print(f"Welcome back, {data['username']}!")
+            print(f"You are {data['age']} years old.")
+            print(f"Your favorite color is {data['fav_color']}.\n")
+        else:
+            print("My apologies, please enter your information again:")
+            data = get_new_username(path)
+            print(f"We'll remember you when you come back, {data['username']}!")
     else:
         data = get_new_username(path)
-        print(f"We'll remember you when you come back, {data['username']}!\n")
+        print(f"We'll remember you when you come back, {data['username']}!")
         
 
 greet_user()
