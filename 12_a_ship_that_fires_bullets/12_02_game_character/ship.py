@@ -11,7 +11,7 @@ class Ship:
         self.screen_rect = ai_game.screen.get_rect()
 
         # Load the ship image and get its rect.
-        self.image = pygame.image.load('12_a_ship_that_fires_bullets/12_02_game_character/spaceship.png')
+        self.image = pygame.image.load('alien_invasion_sprites/spaceship.png')
         self.rect = self.image.get_rect()
 
         # self.rect.midbottom = self.screen_rect.midbottom
