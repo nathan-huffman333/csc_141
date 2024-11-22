@@ -12,7 +12,7 @@ class Ship:
         self.screen_rect = ss_game.screen.get_rect()
 
         # Load the ship image and get its rect.
-        ship = pygame.image.load('alien_invasion_sprites/spaceship.png')
+        ship = pygame.image.load('alien_invasion/alien_invasion_sprites/spaceship.png')
         self.image = pygame.transform.rotate(ship, 270)
         self.rect = self.image.get_rect()
 

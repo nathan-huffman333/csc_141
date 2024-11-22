@@ -1,7 +1,6 @@
-# For comments see alien_invasion.py
-
 import pygame
 from pygame.sprite import Sprite
+from random import randint
 
 class Star(Sprite):
     """A class to represent a single star in the background."""
@@ -11,7 +10,7 @@ class Star(Sprite):
         self.screen = ai_game.screen
 
         # Load the star image and set its rect attribute.
-        self.image = pygame.image.load('alien_invasion/alien_invasion_sprites/star.png')
+        self.image = pygame.image.load('alien_invasion_sprites/star.png')
         self.rect = self.image.get_rect()
 
 
@@ -20,4 +19,11 @@ class Star(Sprite):
         self.rect.y = self.rect.height
 
         # Store the star's exact horizontal position.
-        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
+        self.speed = randint(6, 10)
+
+    def update(self):
+        """Move the raindrop down."""
+        self.y += self.speed
+        self.rect.y = self.y

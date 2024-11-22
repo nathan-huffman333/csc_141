@@ -12,7 +12,7 @@ class Star(Sprite):
         self.screen = ai_game.screen
 
         # Load the star image and set its rect attribute.
-        self.image = pygame.image.load('alien_invasion_sprites/star.png')
+        self.image = pygame.image.load('alien_invasion/alien_invasion_sprites/star.png')
         self.rect = self.image.get_rect()
 
 

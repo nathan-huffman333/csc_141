@@ -1,5 +1,3 @@
-# For comments, see alien_invasion.py
-
 import pygame
 
 class Ship:
@@ -12,10 +10,10 @@ class Ship:
         self.screen_rect = ai_game.screen.get_rect()
 
         # Load the ship image and get its rect.
-        self.image = pygame.image.load('alien_invasion/alien_invasion_sprites/spaceship.png')
+        self.image = pygame.image.load('alien_invasion_sprites/spaceship.png')
         self.rect = self.image.get_rect()
 
-        # Start each new ship at the middle of the screen.
+        # Start each new ship at the bottom middle of the screen.
         self.rect.midbottom = self.screen_rect.midbottom
 
         # Store a float for the ship's exact horizontal position.
@@ -45,6 +43,14 @@ class Ship:
 
         # Update rect object from self.y.
         self.rect.y = self.y
+
+
+    def center_ship(self):
+        """Center the ship on the screen."""
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
+        self.y = self.screen_rect.bottom - self.rect.height
+
 
     def blitme(self):
         """Draw the ship at its current location."""

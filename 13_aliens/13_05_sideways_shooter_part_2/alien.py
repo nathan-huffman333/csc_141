@@ -12,7 +12,7 @@ class Alien(Sprite):
         self.settings = ai_game.settings
 
         # Load the alien image and set its rect attribute.
-        alien = pygame.image.load('alien_invasion_sprites/alien1.png')
+        alien = pygame.image.load('alien_invasion/alien_invasion_sprites/alien1.png')
 
         self.image = pygame.transform.rotate(alien, 270)
         self.rect = self.image.get_rect()
