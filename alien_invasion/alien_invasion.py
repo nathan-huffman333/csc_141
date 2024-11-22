@@ -8,6 +8,8 @@ from alien import Alien
 from star import Star
 from random import randint
 from game_stats import GameStats
+import os
+os.system('cls')
 
 
 class AlienInvasion:
@@ -40,8 +42,6 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
 
         self._create_fleet()
-
-
 
 
     def run_game(self):
@@ -284,8 +284,8 @@ class AlienInvasion:
 
     def _show_game_over_screen(self):
         """Display a Game Over screen and wait for input."""
-        font = pygame.font.Font("CSC_141/alien_invasion_sprites/upheavtt.tff", 96)
-        game_over_text = font.render("GAME OVER", True, (255, 255, 255))
+        font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 48)
+        game_over_text = font.render("GAME OVER", False, (255, 255, 255))
         text_rect = game_over_text.get_rect(center=self.screen.get_rect().center)
         self.screen.blit(game_over_text, text_rect)
 
