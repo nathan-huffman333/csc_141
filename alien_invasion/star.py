@@ -14,16 +14,19 @@ class Star(Sprite):
         self.rect = self.image.get_rect()
 
 
-        # Start each new star near the top left of the screen.
+        # Start each new star near the top of the screen.
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
 
         # Store the star's exact horizontal position.
         self.y = float(self.rect.y)
+        
+        self.star_speed_low = 6
+        self.star_speed_high = 10
+        self.star_speed = randint(self.star_speed_low, self.star_speed_high)
 
-        self.speed = randint(6, 10)
-
+    
     def update(self):
-        """Move the raindrop down."""
-        self.y += self.speed
+        """Move the star down."""
+        self.y += self.star_speed
         self.rect.y = self.y

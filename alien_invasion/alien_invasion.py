@@ -9,8 +9,8 @@ from star import Star
 from random import randint
 from game_stats import GameStats
 from button import Button
-import os
-os.system('cls')
+from scoreboard import Scoreboard
+
 
 
 class AlienInvasion:
@@ -28,8 +28,10 @@ class AlienInvasion:
 
         pygame.display.set_caption("Alien Invasion")
 
-        # Create an instance to store game statistics.
+        # Create an instance to store game statistics, and create a scoreboard.
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
+        
         
         # Start Alien Invasion in an inactive state.
         self.game_active = False
@@ -38,6 +40,7 @@ class AlienInvasion:
         # Make the Play button.
         self.play_button = Button(self, "Play")
         
+
         self.stars = pygame.sprite.Group()
         self.last_star_time = 0
 
@@ -64,6 +67,7 @@ class AlienInvasion:
             self._create_starscape()
             self._update_screen()
             self.clock.tick(60)
+            # print(f"Total stars created: {len(self.stars)}")
                     
     
     def _check_events(self):
@@ -84,17 +88,17 @@ class AlienInvasion:
         """Start a new game when the player clicks Play."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
+            # Reset the game settings.
+            self.settings.initialize_dynamic_settings()
+            
             # Reset the game statistics.
             self.stats.reset_stats()
+            self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.check_high_score()
             self.game_active = True
 
-            # Get rid of any remaining bullets and aliens.
-            self.bullets.empty()
-            self.aliens.empty()
-
-            # Create a new fleet and center the ship.
-            self._create_fleet()
-            self.ship.center_ship()
+            self._reset_level()
 
             # Hide the mouse cursor.
             pygame.mouse.set_visible(False)
@@ -128,8 +132,17 @@ class AlienInvasion:
             self.ship.moving_left = False
 
 
-    def _reset_movement(self):
-        """Reset ship's movement to false to have a clean reset for conditions that take away player control."""
+    def _reset_level(self):
+        """Reset the level by removing aliens and bullets, then creating a new fleet and centering the ship."""
+
+        # Get rid of any remaining bullets and aliens.
+        self.bullets.empty()
+        self.aliens.empty()
+
+        # Create new fleet and return ship to starting position.
+        self._create_fleet()
+        self.ship.center_ship()
+
         self.ship.moving_up = False
         self.ship.moving_down = False
         self.ship.moving_left = False
@@ -147,8 +160,11 @@ class AlienInvasion:
         self.ship.blitme()
         self.aliens.draw(self.screen)
 
+        # Draw the score information.
+        self.sb.show_score()
+
         # Draw the play button if the game is inactive.
-        if not self.game_active:
+        if not self.game_active and not self.game_over:
             self.play_button.draw_button()
 
         # Make the most recently drawn screen visible.
@@ -180,13 +196,23 @@ class AlienInvasion:
         # Remove any bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
         if not self.aliens:
             # Destroy existing bullets and create new fleet.
             self.bullets.empty()
             self._update_screen()
             pygame.display.flip()
-            sleep(1)
             self._create_fleet()
+            self.settings.increase_speed()
+
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
 
     
     def _ship_hit(self):
@@ -194,17 +220,9 @@ class AlienInvasion:
         if self.stats.ships_left > 0:
             # Decrement ships_left.
             self.stats.ships_left -= 1
-
-            # Get rid of any remaining bullets and aliens.
-            self.bullets.empty()
-            self.aliens.empty()
-
-            # Create new fleet and return ship to starting position.
-            self._create_fleet()
-            self.ship.center_ship()
             
-            # Reset movement.
-            self._reset_movement()
+            # Reset level.
+            self._reset_level()
             
             # Pause.
             self._update_screen()
@@ -212,14 +230,16 @@ class AlienInvasion:
             sleep(0.5)
         
         elif self.stats.ships_left == 0 and self.game_active == True:
-            # self.game_active = False
             self.game_over = True
-        
-        """
-        elif self.game_active == True:
+            self._show_game_over_screen()
+            sleep(5)
+            
+            # Reset level.
+            self._reset_level()
+            
+            self.game_over = False
             self.game_active = False
             pygame.mouse.set_visible(True)
-        """
 
 
     def _create_fleet(self):
@@ -288,9 +308,9 @@ class AlienInvasion:
     def _create_starscape(self):
         """Create many stars to make it appear like the ship is flyings."""
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_star_time > 25: 
+        if current_time - self.last_star_time > 25:
             self.last_star_time = current_time
-            x_position = randint(60, self.settings.screen_width - 60)
+            x_position = randint(20, self.settings.screen_width - 20)
             y_position = randint(0, 10)
             self._create_star(x_position, y_position)
 
@@ -312,29 +332,16 @@ class AlienInvasion:
                 self.stars.remove(star)
 
 
-    def _check_star_edges(self):
-        """Respond appropriately if any stars have reached an edge."""
-        for star in self.stars.sprites():
-            if star.check_star_edges():
-                self.stars.remove(star)
-
-
     def _show_game_over_screen(self):
         """Display a Game Over screen and wait for input."""
-        font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 48)
-        game_over_text = font.render("GAME OVER", False, (255, 255, 255))
+        font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 90)
+
+        game_over_text = Scoreboard.render_text_with_outline(self, "GAME OVER", font, (255,255,255), (0, 0, 0), 5)
+
         text_rect = game_over_text.get_rect(center=self.screen.get_rect().center)
         self.screen.blit(game_over_text, text_rect)
 
         pygame.display.flip()
-
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        sys.exit()
 
 
 if __name__ == '__main__':

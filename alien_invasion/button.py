@@ -10,9 +10,9 @@ class Button:
 
         # Set the dimensions and properties of the button.
         self.width, self.height = 200, 50
-        self.button_color = (0, 135, 0)
+        self.button_color = (0, 0, 0)
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 48)
+        self.font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 90)
 
         # Build the button's rect object and center it.
         self.rect = pygame.Rect(0, 0, self.width, self.height)
