@@ -10,6 +10,8 @@ from random import randint
 from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
+from floating_score import FloatingScore
+
 
 
 class AlienInvasion:
@@ -30,6 +32,8 @@ class AlienInvasion:
         # Create an instance to store game statistics, and create a scoreboard.
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
+
+        self.floating_scores = pygame.sprite.Group()
         
         
         # Start Alien Invasion in an inactive state.
@@ -92,7 +96,7 @@ class AlienInvasion:
             
             # Reset the game statistics.
             self.stats.reset_stats()
-            self.sb.prep_score()
+            self.sb.prep_score() 
             self.sb.prep_level()
             self.sb.prep_ships()
             self.sb.check_high_score()
@@ -152,6 +156,7 @@ class AlienInvasion:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
+        
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         
@@ -159,6 +164,10 @@ class AlienInvasion:
 
         self.ship.blitme()
         self.aliens.draw(self.screen)
+
+        self.floating_scores.update()  # Update floating scores
+        for floating_score in self.floating_scores.sprites():
+            floating_score.draw()  # Draw floating scores
 
         # Draw the score information.
         self.sb.show_score()
@@ -169,6 +178,8 @@ class AlienInvasion:
 
         # Make the most recently drawn screen visible.
         pygame.display.flip()
+
+        
 
 
     def _fire_bullet(self):
@@ -197,8 +208,17 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if collisions:
-            for aliens in collisions.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
+            for bullet, aliens in collisions.items():
+                for alien in aliens:
+                    # Add points
+                    self.stats.score += self.settings.alien_points
+
+                    # Create a floating score at the alien's position
+                    floating_score = FloatingScore(self, alien.rect.centerx, alien.rect.centery, self.settings.alien_points)
+                    self.floating_scores.add(floating_score)
+
+                # self.stats.score += self.settings.alien_points * len(aliens)
+
             self.sb.prep_score()
             self.sb.check_high_score()
 
