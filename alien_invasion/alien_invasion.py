@@ -12,8 +12,6 @@ from button import Button
 from scoreboard import Scoreboard
 
 
-
-
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
     def __init__(self):
