@@ -24,6 +24,7 @@ class FloatingScore(pygame.sprite.Sprite):
         self.y = float(self.rect.y)  # Store a float for smooth upward movement
         self.timer = 60  # Total lifespan of the floating score
 
+
     def _interpolate_color(self):
         """Calculate the current color based on the timer."""
         progress = 1 - (self.timer / 60)  # Calculate how far along we are (0 to 1)
@@ -31,6 +32,7 @@ class FloatingScore(pygame.sprite.Sprite):
         g = int(self.start_color[1] + (self.end_color[1] - self.start_color[1]) * progress)
         b = int(self.start_color[2] + (self.end_color[2] - self.start_color[2]) * progress)
         return (r, g, b)
+
 
     def update(self):
         """Move the score up, change its color, and count down its timer."""
@@ -49,6 +51,7 @@ class FloatingScore(pygame.sprite.Sprite):
         self.timer -= 1
         if self.timer <= 0:
             self.kill()
+
 
     def draw(self):
         """Draw the floating score to the screen."""

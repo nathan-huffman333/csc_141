@@ -28,6 +28,13 @@ class Ship(Sprite):
         self.moving_right = False
         self.moving_left = False
 
+        # Opacity for blinking effect.
+        self.blinking = False
+        self.timer = 30
+        self.toggle_timer = 0
+        self.alpha = 255
+
+
     def update(self):
         """Update the ship's position based on the movement flags."""
         # Update the ship's x or y value, not the rect.
@@ -52,6 +59,23 @@ class Ship(Sprite):
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = float(self.rect.x)
         self.y = self.screen_rect.bottom - self.rect.height
+
+
+    def blink_after_hit(self):
+        """Make the ship blink to indicate it was hit."""
+        if self.blinking:
+            self.toggle_timer += 1
+            if self.toggle_timer % 10 == 0:  # Toggle visibility every 10 frames
+                self.alpha = 0 if self.alpha == 255 else 255
+                self.image.set_alpha(self.alpha)
+
+            # Decrease blink duration
+            self.blink_timer -= 1
+            if self.blink_timer <= 0:
+                # Reset blinking state
+                self.blinking = False
+                self.alpha = 255
+                self.image.set_alpha(self.alpha)
 
 
     def blitme(self):

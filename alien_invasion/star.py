@@ -21,7 +21,7 @@ class Star(Sprite):
         # Store the star's exact horizontal position.
         self.y = float(self.rect.y)
         
-        self.star_speed_low = 6
+        self.star_speed_low = 3
         self.star_speed_high = 10
         self.star_speed = randint(self.star_speed_low, self.star_speed_high)
 
