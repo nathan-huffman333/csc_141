@@ -92,10 +92,11 @@ class AlienInvasion:
 
 
     def _check_play_button(self):
-        """Start a new game when the player clicks Play."""
-        if self.waiting_for_start and not self.game_active:
-            self.game_active = True
+        """Start a new game when the player hits enter."""
+        if self.waiting_for_start and not self.game_active and not self.game_over and not self.waiting_for_game_over:
             self.waiting_for_start = False
+            self.game_active = True
+            self._update_screen()
 
         
     def _check_keydown_events(self, event):
@@ -114,8 +115,10 @@ class AlienInvasion:
             # Only fire bullets when the game is active
             if self.game_active:
                 self._fire_bullet()
-        if event.key == pygame.K_RETURN: # and self.waiting_for_start:
+        if event.key == pygame.K_RETURN and self.waiting_for_start and not self.game_active: #and not self.game_over and not self.game_active and not self.waiting_for_game_over:
             self._check_play_button()
+        else:
+            pass
 
 
     def _check_keyup_events(self, event):
@@ -165,8 +168,6 @@ class AlienInvasion:
 
         self.game_over = False
         self.waiting_for_game_over = False
-        self.waiting_for_start = True  # Ensure waiting state is consistent
-        self.game_active = False
 
 
     def _update_screen(self):
@@ -189,8 +190,7 @@ class AlienInvasion:
         self.sb.show_score()
 
         # Draw the play button if the game is inactive.
-
-        if self.waiting_for_start == True:
+        if self.waiting_for_start and not self.game_over and not self.waiting_for_game_over and not self.game_active:
             self.play_button.draw_button()
         
         if self.game_over or self.waiting_for_game_over or self.game_active:
@@ -200,7 +200,7 @@ class AlienInvasion:
             
         if self.game_over:
             self._show_game_over_screen()
-            self.waiting_for_game_over = True
+            
                    
         # Make the most recently drawn screen visible.
         pygame.display.flip()
@@ -395,6 +395,8 @@ class AlienInvasion:
         text_rect = game_over_text.get_rect(center=self.screen.get_rect().center)
         self.screen.blit(game_over_text, text_rect)
 
+        self.waiting_for_game_over = True
+
         pygame.display.flip()
 
 
@@ -403,4 +405,4 @@ class AlienInvasion:
 if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()
-    ai.run_game()
+    ai.run_game() 

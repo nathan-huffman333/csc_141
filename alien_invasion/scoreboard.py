@@ -1,7 +1,9 @@
 import pygame.font
 from pygame.sprite import Group
-
+from pathlib import Path
 from ship import Ship
+path = Path("alien_invasion/high_score.txt")
+
 
 class Scoreboard:
     """A class to report scoring information."""
@@ -64,6 +66,10 @@ class Scoreboard:
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
             self.prep_high_score()
+        if self.stats.score > int(path.read_text()):
+            with open("high_score.txt", "w") as file:
+                pass
+            path.write_text(str(self.stats.score))
 
 
     def prep_level(self):
