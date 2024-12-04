@@ -11,7 +11,8 @@ from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
 from floating_score import FloatingScore
-
+from random import choice
+from threading import Timer
 
 
 class AlienInvasion:
@@ -40,15 +41,14 @@ class AlienInvasion:
         
         self.game_active = False
         self.game_over = False
-        
-        self.ignore_input_until = 0  # Time until which keypresses are ignored
+        self.waiting_for_start = True
+        self.waiting_for_game_over = False
 
         # Hide the mouse cursor.
         pygame.mouse.set_visible(False)
 
         # Make the Play button.
-        message = ("Enter to Play")
-        self.play_button = Button(self, message)
+        self.play_button = Button(self, "Enter to Play")
         
 
         self.stars = pygame.sprite.Group()
@@ -66,10 +66,7 @@ class AlienInvasion:
         while True:
             self._check_events()
 
-            if self.game_over:
-                self._show_game_over_screen()
-
-            elif self.game_active:
+            if self.game_active:
                 self.ship.update()
                 if self.ship.blinking:
                     self.ship.blink_after_hit()
@@ -84,15 +81,11 @@ class AlienInvasion:
                     
     
     def _check_events(self):
-        """Respond to keypresses and mouse events."""
-        if pygame.time.get_ticks() < self.ignore_input_until:
-            # Ignore all inputs if still in the pause period
-            return
-
+        """Respond to keypresses."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN: 
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
@@ -100,38 +93,28 @@ class AlienInvasion:
 
     def _check_play_button(self):
         """Start a new game when the player clicks Play."""
-        if not self.game_active:
-            # Reset the game settings.
-            self.settings.initialize_dynamic_settings()
-            
-            # Reset the game statistics.
-            self.stats.reset_stats()
-            self.sb.prep_score() 
-            self.sb.prep_level()
-            self.sb.prep_ships()
-            self.sb.check_high_score()
+        if self.waiting_for_start and not self.game_active:
             self.game_active = True
+            self.waiting_for_start = False
 
-            self._reset_level()
-
-
+        
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.ship.moving_up = True
-        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+        if event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = True
-        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = True
-        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = True
-        elif event.key == pygame.K_ESCAPE:
+        if event.key == pygame.K_ESCAPE:
             sys.exit()
-        elif event.key == pygame.K_SPACE:
+        if event.key == pygame.K_SPACE:
             # Only fire bullets when the game is active
             if self.game_active:
                 self._fire_bullet()
-        elif event.key == pygame.K_RETURN and self.game_active == False and self.game_over == False:
+        if event.key == pygame.K_RETURN: # and self.waiting_for_start:
             self._check_play_button()
 
 
@@ -139,11 +122,11 @@ class AlienInvasion:
         """Respond to key releases."""
         if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.ship.moving_up = False
-        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+        if event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
-        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = False
-        elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = False
 
 
@@ -154,6 +137,7 @@ class AlienInvasion:
         self.bullets.empty()
         self.aliens.empty()
 
+        self.floating_scores.empty()
         # Create new fleet and return ship to starting position.
         self._create_fleet()
         self.ship.center_ship()
@@ -162,6 +146,27 @@ class AlienInvasion:
         self.ship.moving_down = False
         self.ship.moving_left = False
         self.ship.moving_right = False
+
+
+    def _reset_game(self):
+        """Reset the entire game after a game over."""
+
+        self._reset_level()
+
+        # Reset the game settings.
+        self.settings.initialize_dynamic_settings()
+    
+        # Reset the game statistics.
+        self.stats.reset_stats()  # This should reset ships_left here
+        self.sb.prep_score() 
+        self.sb.prep_level()
+        self.sb.prep_ships()  # This updates the ship count on the scoreboard
+        self.sb.check_high_score()
+
+        self.game_over = False
+        self.waiting_for_game_over = False
+        self.waiting_for_start = True  # Ensure waiting state is consistent
+        self.game_active = False
 
 
     def _update_screen(self):
@@ -184,9 +189,19 @@ class AlienInvasion:
         self.sb.show_score()
 
         # Draw the play button if the game is inactive.
-        if not self.game_active and not self.game_over:
-            self.play_button.draw_button()
 
+        if self.waiting_for_start == True:
+            self.play_button.draw_button()
+        
+        if self.game_over or self.waiting_for_game_over or self.game_active:
+            self.waiting_for_start = False
+        else:
+            self.waiting_for_start = True
+            
+        if self.game_over:
+            self._show_game_over_screen()
+            self.waiting_for_game_over = True
+                   
         # Make the most recently drawn screen visible.
         pygame.display.flip()
 
@@ -253,7 +268,8 @@ class AlienInvasion:
 
             # Start blinking effect
             self.ship.blinking = True
-            self.ship.blink_timer = 60  # Ship will blink for 60 frames (1 second at 60 FPS)
+            # Ship will blink for 60 frames (1 second at 60 FPS)
+            self.ship.blink_timer = 60  
 
             # Reset level.
             self._reset_level()
@@ -271,21 +287,14 @@ class AlienInvasion:
 
             self.game_active = False
             self.game_over = True
-        
-            self._show_game_over_screen()
-        
-            # Set the pause for 5 seconds
-            self.ignore_input_until = pygame.time.get_ticks() + 5000
 
-            sleep(5)  # Keep the Game Over screen visible
+            # Make the Game Over screen visible by updating the screen.
+            self._update_screen()
 
-            # Reset level after pause
-            self._reset_level()
-            self.game_over = False
+            # Wait 5 seconds and then reset game.
+            Timer(5, self._reset_game).start()
             
            
-
-
     def _create_fleet(self):
         """Create the fleet of aliens."""
         # Create an alien and keep adding aliens until there's no room left.
@@ -305,7 +314,8 @@ class AlienInvasion:
 
     def _create_alien(self, x_position, y_position):
         """Create an alien and place it in the fleet."""
-        new_alien = Alien(self)
+        alien_type = choice([1, 2, 3])  # Randomly choose between three alien types
+        new_alien = Alien(self, alien_type=alien_type)
         new_alien.x = x_position
         new_alien.rect.x = x_position
         new_alien.rect.y = y_position
@@ -386,6 +396,8 @@ class AlienInvasion:
         self.screen.blit(game_over_text, text_rect)
 
         pygame.display.flip()
+
+
 
 
 if __name__ == '__main__':

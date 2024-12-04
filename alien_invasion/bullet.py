@@ -57,14 +57,11 @@ class Bullet(Sprite):
             self.rect1.x = self.x1
 
  
-
-    
     def draw_bullet(self):
         """Draw the bullet(s) to the screen."""
         pygame.draw.rect(self.screen, self.color, self.rect1) 
         if self.rect2:
             pygame.draw.rect(self.screen, self.color, self.rect2)
-
 
 
     @property    
