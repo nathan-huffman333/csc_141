@@ -95,18 +95,21 @@ class Scoreboard:
 
             # Create an outline surface
             outline_width = 3
-            outline_color = (255, 255, 255)  # White outline
+            # outline_color = (255, 255, 255)  # White outline
             outline_surface = pygame.Surface((scaled_image.get_width() + 2 * outline_width, scaled_image.get_height() + 2 * outline_width), pygame.SRCALPHA)
 
             # Fill the outline surface with transparency
             outline_surface.fill((0, 0, 0, 0))
 
+
+            """
             # Create a mask of the ship texture
             mask = pygame.mask.from_surface(scaled_image)
 
             # Get the outline as a list of points
             outline_points = mask.outline()
 
+            
             # Draw blocky outline by iterating over offsets
             for dx in range(-outline_width, outline_width + 1):
                 for dy in range(-outline_width, outline_width + 1):
@@ -116,6 +119,7 @@ class Scoreboard:
                             new_y = y + dy + outline_width
                             if 0 <= new_x < outline_surface.get_width() and 0 <= new_y < outline_surface.get_height():
                                 outline_surface.set_at((new_x, new_y), outline_color)
+                                """
 
             # Blit the original ship onto the outline surface
             outline_surface.blit(scaled_image, (outline_width, outline_width))

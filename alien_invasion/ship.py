@@ -35,7 +35,7 @@ class Ship(Sprite):
         self.alpha = 255
 
 
-    def update(self):
+    def update(self, dt):
         """Update the ship's position based on the movement flags."""
         # Update the ship's x or y value, not the rect.
         if self.moving_up and self.rect.top > 0:

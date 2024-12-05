@@ -1,6 +1,13 @@
 import pygame
 from pygame.sprite import Sprite
 
+pygame.init()
+pygame.mixer.init()
+
+laser_soundfx = pygame.mixer.Sound("alien_invasion/alien_invasion_sprites/laser.mp3")
+laser_soundfx.set_volume(0.5)
+
+
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
     def __init__(self, ai_game, offset=11):

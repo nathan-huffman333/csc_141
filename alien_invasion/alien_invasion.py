@@ -5,7 +5,6 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
-from star import Star
 from random import randint
 from game_stats import GameStats
 from button import Button
@@ -13,6 +12,9 @@ from scoreboard import Scoreboard
 from floating_score import FloatingScore
 from random import choice
 from threading import Timer
+from sound_effects import Laser
+from parallax_background import ParallaxBackground
+
 
 
 class AlienInvasion:
@@ -24,7 +26,7 @@ class AlienInvasion:
         self.clock = pygame.time.Clock()
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((1920, 1200), pygame.FULLSCREEN, pygame.HWSURFACE | pygame.DOUBLEBUF) #(1920, 1200)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
 
@@ -34,11 +36,12 @@ class AlienInvasion:
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
 
+        self.laser_fx = Laser()
+
         self.floating_scores = pygame.sprite.Group()
         
         
-        # Start Alien Invasion in an inactive state.
-        
+        # Initialize game states for Alien Invasion.
         self.game_active = False
         self.game_over = False
         self.waiting_for_start = True
@@ -49,10 +52,16 @@ class AlienInvasion:
 
         # Make the Play button.
         self.play_button = Button(self, "Enter to Play")
+
+        # Make the Game Over screen.
+        self.font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 120)
+        self.game_over_image = Scoreboard.render_text_with_outline(self, "GAME OVER", self.font, (255,255,255), (0, 0, 0), 5)
+        self.game_over_image_rect = self.game_over_image.get_rect(center=self.screen.get_rect().center)
+
         
 
-        self.stars = pygame.sprite.Group()
-        self.last_star_time = 0
+        self.parallax_background = ParallaxBackground(self.screen, self.settings)
+
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -61,23 +70,23 @@ class AlienInvasion:
         self._create_fleet()
 
 
-    def run_game(self):
+    def run_game(self): 
         """Start the main loop for the game."""
         while True:
+            dt = self.clock.tick(60) / 1000.0
             self._check_events()
 
             if self.game_active:
-                self.ship.update()
+                self.ship.update(dt)
                 if self.ship.blinking:
                     self.ship.blink_after_hit()
                 self._update_bullets()
                 self._update_aliens()
         
-            self._update_stars()
-            self._create_starscape()
+ 
+            self.parallax_background.update(dt)
             self._update_screen()
-            self.clock.tick(60)
-            # print(f"Total stars created: {len(self.stars)}")
+
                     
     
     def _check_events(self):
@@ -173,12 +182,12 @@ class AlienInvasion:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
+
+        self.parallax_background.draw()
         
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         
-        self.stars.draw(self.screen)
-
         self.ship.blitme()
         self.aliens.draw(self.screen)
 
@@ -211,6 +220,7 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            self.laser_fx.play_laser_sfx()
 
 
     def _update_bullets(self):
@@ -250,7 +260,6 @@ class AlienInvasion:
             # Destroy existing bullets and create new fleet.
             self.bullets.empty()
             self._update_screen()
-            pygame.display.flip()
             self._create_fleet()
             self.settings.increase_speed()
 
@@ -268,30 +277,26 @@ class AlienInvasion:
 
             # Start blinking effect
             self.ship.blinking = True
+            
             # Ship will blink for 60 frames (1 second at 60 FPS)
             self.ship.blink_timer = 60  
 
             # Reset level.
             self._reset_level()
-            
-            # Pause.
-            self._update_screen()
-            pygame.display.flip()
-            sleep(0.2)
+
         
         else: 
             self.stats.ships_left -= 1
             self.sb.prep_ships()
-            self._update_screen()
-            pygame.display.flip()
 
             self.game_active = False
             self.game_over = True
 
-            # Make the Game Over screen visible by updating the screen.
-            self._update_screen()
+            # Make the Game Over screen visible.
+            self._show_game_over_screen()
 
             # Wait 5 seconds and then reset game.
+            
             Timer(5, self._reset_game).start()
             
            
@@ -301,15 +306,15 @@ class AlienInvasion:
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
 
-        current_x, current_y = alien_width*.85, alien_height*.5
-        while current_y < (self.settings.screen_height - 5 * alien_height):
-            while current_x < (self.settings.screen_width - 1.5 * alien_width):
+        current_x, current_y = self.settings.screen_width/19, self.settings.screen_height/24 
+        while current_y < (self.settings.screen_height/2): 
+            while current_x < (self.settings.screen_width*(18/19)): 
                 self._create_alien(current_x, current_y)
-                current_x += 1.75 * alien_width
+                current_x += (self.settings.screen_width/19)*2 
         
             # Finshed a row; reset x value, and increment y value.
-            current_x = alien_width*.85
-            current_y += 1.5 * alien_height
+            current_x = self.settings.screen_width/19 
+            current_y += (self.settings.screen_height/24)*3 
 
 
     def _create_alien(self, x_position, y_position):
@@ -324,6 +329,7 @@ class AlienInvasion:
 
     def _update_aliens(self):
         """Check if the fleet is at an edge, then update positions."""
+        """
         self._check_fleet_edges()
         self.aliens.update()
 
@@ -332,6 +338,21 @@ class AlienInvasion:
             self._ship_hit()
     
         # Look for aliens hitting the bottom of the screen.
+        self._check_aliens_bottom()
+        """
+
+        self._check_fleet_edges()
+        self.aliens.update()
+
+        # Cull aliens off-screen
+        for alien in self.aliens.copy():
+            if alien.rect.top >= self.settings.screen_height:
+                self.aliens.remove(alien)
+
+        # Check for ship collisions
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            self._ship_hit()
+
         self._check_aliens_bottom()
 
 
@@ -359,45 +380,10 @@ class AlienInvasion:
                 break
 
 
-    def _create_starscape(self):
-        """Create many stars to make it appear like the ship is flyings."""
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_star_time > 25:
-            self.last_star_time = current_time
-            x_position = randint(20, self.settings.screen_width - 20)
-            y_position = randint(0, 10)
-            self._create_star(x_position, y_position)
-
-
-    def _create_star(self, x_position, y_position):
-        """Create a star and place it in the background."""
-        new_star = Star(self)
-        new_star.y = y_position
-        new_star.rect.x = x_position
-        new_star.rect.y = y_position
-        self.stars.add(new_star)
-
-
-    def _update_stars(self):
-        """Check if the stars are at an edge, then update positions."""
-        self.stars.update()
-        for star in self.stars.copy():
-            if star.rect.top >= self.settings.screen_height:
-                self.stars.remove(star)
-
-
     def _show_game_over_screen(self):
         """Display a Game Over screen and wait for input."""
-        font = pygame.font.Font("alien_invasion/alien_invasion_sprites/upheavtt.ttf", 120)
-
-        game_over_text = Scoreboard.render_text_with_outline(self, "GAME OVER", font, (255,255,255), (0, 0, 0), 5)
-
-        text_rect = game_over_text.get_rect(center=self.screen.get_rect().center)
-        self.screen.blit(game_over_text, text_rect)
-
+        self.screen.blit(self.game_over_image, self.game_over_image_rect)
         self.waiting_for_game_over = True
-
-        pygame.display.flip()
 
 
 
