@@ -28,7 +28,7 @@ class AlienInvasion:
         self.clock = pygame.time.Clock()
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((1920, 1200), pygame.FULLSCREEN, pygame.HWSURFACE | pygame.DOUBLEBUF) #(1920, 1200)
+        self.screen = pygame.display.set_mode((1920, 1200), pygame.FULLSCREEN, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
 
