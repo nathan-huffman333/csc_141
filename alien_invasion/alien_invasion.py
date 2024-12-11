@@ -12,10 +12,11 @@ from scoreboard import Scoreboard
 from floating_score import FloatingScore
 from random import choice
 from threading import Timer
-from sound_effects import Laser
-from sound_effects import Explosion_sfx
 from parallax_background import ParallaxBackground
 from explosion import Explosion
+from sound_effects import Laser
+from sound_effects import Explosion_sfx
+from sound_effects import Point_sfx
 
 
 class AlienInvasion:
@@ -60,12 +61,16 @@ class AlienInvasion:
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
-        self.laser_sfx = Laser()
-        self.explosion_sfx = Explosion_sfx()
         self.aliens = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.floating_scores = pygame.sprite.Group()
         self.parallax_background = ParallaxBackground(self.screen, self.settings)
+        self.laser_sfx = Laser()
+        self.explosion_sfx = Explosion_sfx()
+        self.point_sfx = Point_sfx()
+
+        pygame.mixer.music.load("alien_invasion/alien_invasion_sprites/background_music.ogg")
+        pygame.mixer.music.play(-1)  # Play background music indefinitely
 
         self._create_fleet()
 
@@ -93,7 +98,7 @@ class AlienInvasion:
         
             self.parallax_background.update(dt)
             self._update_screen()
-                    
+            
     
     def _check_events(self):
         """Respond to keypresses."""
@@ -260,6 +265,7 @@ class AlienInvasion:
                     # Create a floating score at the alien's position
                     floating_score = FloatingScore(self, alien.rect.centerx, alien.rect.centery, self.settings.alien_points)
                     self.floating_scores.add(floating_score)
+                    self.point_sfx.play_point_sfx()
             
             for aliens in collisions.values():
                 for alien in aliens:
