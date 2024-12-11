@@ -92,40 +92,7 @@ class Scoreboard:
 
             # Resize the ship image
             scaled_image = pygame.transform.scale(ship.image, (65, 65))  # Adjust size as needed
-
-            # Create an outline surface
-            outline_width = 3
-            # outline_color = (255, 255, 255)  # White outline
-            outline_surface = pygame.Surface((scaled_image.get_width() + 2 * outline_width, scaled_image.get_height() + 2 * outline_width), pygame.SRCALPHA)
-
-            # Fill the outline surface with transparency
-            outline_surface.fill((0, 0, 0, 0))
-
-
-            """
-            # Create a mask of the ship texture
-            mask = pygame.mask.from_surface(scaled_image)
-
-            # Get the outline as a list of points
-            outline_points = mask.outline()
-
-            
-            # Draw blocky outline by iterating over offsets
-            for dx in range(-outline_width, outline_width + 1):
-                for dy in range(-outline_width, outline_width + 1):
-                    if dx != 0 or dy != 0:  # Skip the original pixels
-                        for x, y in outline_points:
-                            new_x = x + dx + outline_width
-                            new_y = y + dy + outline_width
-                            if 0 <= new_x < outline_surface.get_width() and 0 <= new_y < outline_surface.get_height():
-                                outline_surface.set_at((new_x, new_y), outline_color)
-                                """
-
-            # Blit the original ship onto the outline surface
-            outline_surface.blit(scaled_image, (outline_width, outline_width))
-
-            # Update the ship's image to include the outlined texture
-            ship.image = outline_surface
+            ship.image = scaled_image
 
             # Position the ship icons
             ship.rect.x = 10 + ship_number * 75  # Adjust spacing

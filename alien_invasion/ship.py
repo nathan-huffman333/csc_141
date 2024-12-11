@@ -28,6 +28,8 @@ class Ship(Sprite):
         self.moving_right = False
         self.moving_left = False
 
+        self.visible = True
+
         # Opacity for blinking effect.
         self.blinking = False
         self.timer = 30
@@ -80,4 +82,5 @@ class Ship(Sprite):
 
     def blitme(self):
         """Draw the ship at its current location."""
-        self.screen.blit(self.image, self.rect)
+        if self.visible:
+            self.screen.blit(self.image, self.rect)

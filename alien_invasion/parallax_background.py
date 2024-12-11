@@ -10,7 +10,6 @@ class ParallaxBackground:
         self.layers = [
             pygame.image.load("alien_invasion/alien_invasion_sprites/backgrounds/background_1.png").convert_alpha(),
             pygame.image.load("alien_invasion/alien_invasion_sprites/backgrounds/background_2.png").convert_alpha()
-            #pygame.image.load("alien_invasion/alien_invasion_sprites/backgrounds/background_3.png").convert_alpha()
         ]
 
         # Scale layers to fit the screen
@@ -20,7 +19,7 @@ class ParallaxBackground:
         self.layer_positions = [0, 0, 0]
 
         # Scrolling speeds for each layer
-        self.scroll_speeds = [3.0, 5.0] #, 1.5]  # Adjust speeds as needed
+        self.scroll_speeds = [3.0, 4.5] # Adjust speeds as needed
 
 
     def update(self, dt):
